@@ -139,6 +139,7 @@ namespace ScpProximityChat
                 SpeakerToy speaker = Object.Instantiate(PrefabHelper.GetPrefab<SpeakerToy>(PrefabType.SpeakerToy), player.Transform, true);
                 NetworkServer.Spawn(speaker.gameObject);
                 speaker.NetworkControllerId = (byte)player.Id;
+                speaker.NetworkMinDistance = _config.MinDistance;
                 speaker.NetworkMaxDistance = _config.MaxDistance;
                 speaker.transform.position = player.Position;
 
