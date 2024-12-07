@@ -32,10 +32,10 @@ namespace ScpProximityChat
         public float Volume { get; set; } = 10f;
 
         [Description("Represents the distance at which the audio is full volume.")]
-        public float MinDistance { get; set; } = 5f;
+        public float MinDistance { get; set; } = 2f;
 
         [Description("Max voice distance through the proximity chat.")]
-        public float MaxDistance { get; set; } = 7f;
+        public float MaxDistance { get; set; } = 10f;
 
         [Description("Hint displayed when a scp activates its proximity chat.")]
         public Hint ProximityChatEnabled { get; set; } = new()
