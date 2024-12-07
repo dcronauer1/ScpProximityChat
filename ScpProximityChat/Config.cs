@@ -28,8 +28,14 @@ namespace ScpProximityChat
             RoleTypeId.Scp939,
         };
 
+        [Description("The volume of the voice.")]
+        public float Volume { get; set; } = 10f;
+
+        [Description("Represents the distance at which the audio is full volume.")]
+        public float MinDistance { get; set; } = 5f;
+
         [Description("Max voice distance through the proximity chat.")]
-        public float MaxDistance { get; set; } = 15f;
+        public float MaxDistance { get; set; } = 7f;
 
         [Description("Hint displayed when a scp activates its proximity chat.")]
         public Hint ProximityChatEnabled { get; set; } = new()
