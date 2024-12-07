@@ -28,6 +28,9 @@ namespace ScpProximityChat
             RoleTypeId.Scp939,
         };
 
+        [Description("The volume of the voice.")]
+        public float Volume { get; set; } = 10f;
+
         [Description("Represents the distance at which the audio is full volume.")]
         public float MinDistance { get; set; } = 5f;
 

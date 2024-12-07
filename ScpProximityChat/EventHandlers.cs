@@ -7,6 +7,8 @@ using Mirror;
 using PlayerRoles.FirstPersonControl;
 using UserSettings.ServerSpecific;
 using VoiceChat;
+using VoiceChat.Codec;
+using VoiceChat.Codec.Enums;
 using VoiceChat.Networking;
 using Object = UnityEngine.Object;
 
@@ -16,11 +18,15 @@ namespace ScpProximityChat
     {
         private readonly Config _config;
         private readonly Dictionary<Player, SpeakerToy> _toggledPlayers;
+        private readonly OpusDecoder _opusDecoder;
+        private readonly OpusEncoder _opusEncoder;
 
         internal EventHandlers(Config config)
         {
             _config = config;
             _toggledPlayers = new Dictionary<Player, SpeakerToy>();
+            _opusDecoder = new OpusDecoder();
+            _opusEncoder = new OpusEncoder(OpusApplicationType.Voip);
         }
 
         internal void RegisterEvents()
@@ -73,7 +79,18 @@ namespace ScpProximityChat
 
             if (_toggledPlayers.TryGetValue(player, out SpeakerToy speaker))
             {
-                AudioMessage audioMessage = new AudioMessage(speaker.ControllerId, ev.VoiceMessage.Data, ev.VoiceMessage.DataLength);
+                float[] decodedBuffer = new float[480];
+                _opusDecoder.Decode(ev.VoiceMessage.Data, ev.VoiceMessage.DataLength, decodedBuffer);
+
+                for (int i = 0; i < decodedBuffer.Length; i++)
+                {
+                    decodedBuffer[i] *= _config.Volume;
+                }
+
+                byte[] encodedData = new byte[512];
+                int dataLen = _opusEncoder.Encode(decodedBuffer, encodedData);
+
+                AudioMessage audioMessage = new AudioMessage(speaker.ControllerId, encodedData, dataLen);
                 foreach (Player target in Player.List)
                 {
                     if (target != player)
@@ -144,7 +161,7 @@ namespace ScpProximityChat
                 speaker.transform.position = player.Position;
 
                 _toggledPlayers.Add(player, speaker);
-                
+
                 player.ShowHint(_config.ProximityChatEnabled);
             }
         }
