@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using AdminToys;
 using Exiled.API.Enums;
 using Exiled.API.Features;
+using Exiled.API.Features.Roles;
 using Exiled.Events.EventArgs.Player;
 using Mirror;
 using PlayerRoles.FirstPersonControl;
@@ -93,7 +94,7 @@ namespace ScpProximityChat
                 AudioMessage audioMessage = new AudioMessage(speaker.ControllerId, encodedData, dataLen);
                 foreach (Player target in Player.List)
                 {
-                    if (target != player)
+                    if (target.Role is IVoiceRole voiceRole && voiceRole.VoiceModule.ValidateReceive(player.ReferenceHub, VoiceChatChannel.Proximity) != VoiceChatChannel.None && target.VoiceChannel != VoiceChatChannel.ScpChat)
                         target.ReferenceHub.connectionToClient.Send(audioMessage);
                 }
             }
