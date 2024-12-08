@@ -1,4 +1,4 @@
-namespace ScpProximityChat
+namespace ScpProximityChat.Enums
 {
     public enum ActivationType
     {

@@ -96,9 +96,10 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="ActivationType.cs" />
         <Compile Include="Config.cs" />
+        <Compile Include="Enums\ActivationType.cs" />
         <Compile Include="EventHandlers.cs" />
+        <Compile Include="OpusHandler.cs" />
         <Compile Include="Plugin.cs" />
         <Compile Include="Properties\AssemblyInfo.cs"/>
     </ItemGroup>

@@ -6,10 +6,9 @@ using Exiled.API.Features.Roles;
 using Exiled.Events.EventArgs.Player;
 using Mirror;
 using PlayerRoles.FirstPersonControl;
+using ScpProximityChat.Enums;
 using UserSettings.ServerSpecific;
 using VoiceChat;
-using VoiceChat.Codec;
-using VoiceChat.Codec.Enums;
 using VoiceChat.Networking;
 using Object = UnityEngine.Object;
 
@@ -19,15 +18,11 @@ namespace ScpProximityChat
     {
         private readonly Config _config;
         private readonly Dictionary<Player, SpeakerToy> _toggledPlayers;
-        private readonly OpusDecoder _opusDecoder;
-        private readonly OpusEncoder _opusEncoder;
 
         internal EventHandlers(Config config)
         {
             _config = config;
             _toggledPlayers = new Dictionary<Player, SpeakerToy>();
-            _opusDecoder = new OpusDecoder();
-            _opusEncoder = new OpusEncoder(OpusApplicationType.Voip);
         }
 
         internal void RegisterEvents()
@@ -80,8 +75,9 @@ namespace ScpProximityChat
 
             if (_toggledPlayers.TryGetValue(player, out SpeakerToy speaker))
             {
+                OpusHandler opusHandler = OpusHandler.Get(player);
                 float[] decodedBuffer = new float[480];
-                _opusDecoder.Decode(ev.VoiceMessage.Data, ev.VoiceMessage.DataLength, decodedBuffer);
+                opusHandler.Decoder.Decode(ev.VoiceMessage.Data, ev.VoiceMessage.DataLength, decodedBuffer);
 
                 for (int i = 0; i < decodedBuffer.Length; i++)
                 {
@@ -89,12 +85,12 @@ namespace ScpProximityChat
                 }
 
                 byte[] encodedData = new byte[512];
-                int dataLen = _opusEncoder.Encode(decodedBuffer, encodedData);
+                int dataLen = opusHandler.Encoder.Encode(decodedBuffer, encodedData);
 
                 AudioMessage audioMessage = new AudioMessage(speaker.ControllerId, encodedData, dataLen);
                 foreach (Player target in Player.List)
                 {
-                    if (target.Role is IVoiceRole voiceRole && voiceRole.VoiceModule.ValidateReceive(player.ReferenceHub, VoiceChatChannel.Proximity) != VoiceChatChannel.None && target.VoiceChannel != VoiceChatChannel.ScpChat)
+                    if (target.Role is IVoiceRole voiceRole && voiceRole.VoiceModule.ValidateReceive(player.ReferenceHub, VoiceChatChannel.Proximity) != VoiceChatChannel.None && !target.IsScp)
                         target.ReferenceHub.connectionToClient.Send(audioMessage);
                 }
             }
@@ -147,8 +143,10 @@ namespace ScpProximityChat
         {
             if (_toggledPlayers.ContainsKey(player))
             {
-                Object.Destroy(_toggledPlayers[player].gameObject);
+                NetworkServer.Destroy(_toggledPlayers[player].gameObject);
                 _toggledPlayers.Remove(player);
+
+                OpusHandler.Remove(player);
 
                 player.ShowHint(_config.ProximityChatDisabled);
             }

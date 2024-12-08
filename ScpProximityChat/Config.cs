@@ -3,6 +3,7 @@ using System.ComponentModel;
 using Exiled.API.Features;
 using Exiled.API.Interfaces;
 using PlayerRoles;
+using ScpProximityChat.Enums;
 
 namespace ScpProximityChat
 {
