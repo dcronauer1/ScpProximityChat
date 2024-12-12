@@ -22,6 +22,12 @@ namespace ScpProximityChat
             return opusHandler;
         }
 
-        public static void Remove(Player player) => Handlers.Remove(player);
+        public static void Remove(Player player)
+        {
+            OpusHandler opusHandler = Handlers[player];
+            opusHandler.Decoder.Dispose();
+            opusHandler.Encoder.Dispose();
+            Handlers.Remove(player);
+        }
     }
 }
