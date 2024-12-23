@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Exiled.API.Extensions;
 using Exiled.API.Features;
+using Exiled.API.Features.Core.UserSettings;
 using PlayerRoles;
 using ScpProximityChat.Enums;
-using UserSettings.ServerSpecific;
 
 namespace ScpProximityChat
 {
@@ -27,14 +26,15 @@ namespace ScpProximityChat
 
             if (Config.ActivationType == ActivationType.ServerSpecificSettings)
             {
-                List<ServerSpecificSettingBase> settings = ServerSpecificSettingsSync.DefinedSettings?.ToList() ?? new List<ServerSpecificSettingBase>();
-                settings.AddRange(new ServerSpecificSettingBase[]
+                HeaderSetting header = new HeaderSetting(Config.SettingHeaderLabel);
+                IEnumerable<SettingBase> settingBases = new SettingBase[]
                 {
-                    new SSGroupHeader(Config.SettingHeaderLabel),
-                    new SSKeybindSetting(Config.KeybindId, Config.KeybindLabel, hint: Config.KeybindHint)
-                });
-                ServerSpecificSettingsSync.DefinedSettings = settings.ToArray();
-                ServerSpecificSettingsSync.SendToAll();
+                    header,
+                    new KeybindSetting(Config.KeybindId, Config.KeybindLabel, default, hintDescription: Config.KeybindHint),
+                };
+
+                SettingBase.Register(settingBases);
+                SettingBase.SendToAll();
             }
 
             base.OnEnabled();
