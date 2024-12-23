@@ -114,7 +114,16 @@ namespace ScpProximityChat
 
             if(_config.ScpRoles.Contains(ev.NewRole))
             {
-                player.Broadcast(_config.ProximityChatBroadcast);
+                Message message = _config.ProximityChatRole;
+                switch (message.Type)
+                {
+                    case MessageType.Broadcast when message.Show:
+                        player.Broadcast(message.Duration, message.Content);
+                        break;
+                    case MessageType.Hint when message.Show:
+                        player.ShowHint(message.Content, message.Duration);
+                        break;
+                }
             }
         }
 
@@ -155,7 +164,16 @@ namespace ScpProximityChat
 
                 OpusHandler.Remove(player);
 
-                player.ShowHint(_config.ProximityChatDisabled);
+                Message message = _config.ProximityChatDisabled;
+                switch (message.Type)
+                {
+                    case MessageType.Broadcast when message.Show:
+                        player.Broadcast(message.Duration, message.Content);
+                        break;
+                    case MessageType.Hint when message.Show:
+                        player.ShowHint(message.Content, message.Duration);
+                        break;
+                }
             }
             else
             {
@@ -168,7 +186,16 @@ namespace ScpProximityChat
 
                 _toggledPlayers.Add(player, speaker);
 
-                player.ShowHint(_config.ProximityChatEnabled);
+                Message message = _config.ProximityChatEnabled;
+                switch (message.Type)
+                {
+                    case MessageType.Broadcast when message.Show:
+                        player.Broadcast(message.Duration, message.Content);
+                        break;
+                    case MessageType.Hint when message.Show:
+                        player.ShowHint(message.Content, message.Duration);
+                        break;
+                }
             }
         }
     }

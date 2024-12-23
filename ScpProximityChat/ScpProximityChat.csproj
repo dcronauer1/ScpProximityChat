@@ -98,7 +98,9 @@
     <ItemGroup>
         <Compile Include="Config.cs" />
         <Compile Include="Enums\ActivationType.cs" />
+        <Compile Include="Enums\MessageType.cs" />
         <Compile Include="EventHandlers.cs" />
+        <Compile Include="Message.cs" />
         <Compile Include="OpusHandler.cs" />
         <Compile Include="Plugin.cs" />
         <Compile Include="Properties\AssemblyInfo.cs"/>

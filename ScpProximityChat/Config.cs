@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.ComponentModel;
-using Exiled.API.Features;
 using Exiled.API.Interfaces;
 using PlayerRoles;
 using ScpProximityChat.Enums;
@@ -42,23 +41,26 @@ namespace ScpProximityChat
         public float MaxDistance { get; set; } = 10f;
 
         [Description("Hint displayed when a scp activates its proximity chat.")]
-        public Hint ProximityChatEnabled { get; set; } = new()
+        public Message ProximityChatEnabled { get; set; } = new()
         {
+            Type = MessageType.Hint,
             Content = "<b>Proximity chat is now <color=green>enabled</color>.</b>",
-            Duration = 3f,
+            Duration = 3,
             Show = true,
         };
 
         [Description("Hint displayed when a scp deactivates its proximity chat.")]
-        public Hint ProximityChatDisabled { get; set; } = new()
+        public Message ProximityChatDisabled { get; set; } = new()
         {
+            Type = MessageType.Hint,
             Content = "<b>Proximity chat is now <color=red>disabled</color>.</b>",
-            Duration = 3f,
+            Duration = 3,
             Show = true,
         };
 
-        public Exiled.API.Features.Broadcast ProximityChatBroadcast { get; set; } = new()
+        public Message ProximityChatRole { get; set; } = new()
         {
+            Type = MessageType.Broadcast,
             Content = "<b>You can toggle proximity chat by using the keybind configured in your settings.</b>",
             Duration = 10,
             Show = true,
