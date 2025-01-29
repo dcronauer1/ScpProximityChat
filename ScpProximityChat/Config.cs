@@ -41,6 +41,13 @@ namespace ScpProximityChat
         public float MaxDistance { get; set; } = 10f;
 
         [Description("Hint displayed when a scp activates its proximity chat.")]
+        public Message ProximityChatDenied { get; set; } = new()
+        {
+            Type = MessageType.Hint,
+            Content = "<b>You do not have permission to use this feature</b>",
+            Duration = 3,
+            Show = true,
+        };
         public Message ProximityChatEnabled { get; set; } = new()
         {
             Type = MessageType.Hint,

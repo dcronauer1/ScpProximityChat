@@ -161,8 +161,19 @@ namespace ScpProximityChat
 
         private void ToggleProximity(Player player)
         {
-            if (!Permissions.CheckPermission(player, "scpprox.allow")) //code for permission
+            if (!Permissions.CheckPermission(player, "scpprox.allow")){ //code for permission
+                Message message = _config.ProximityChatDenied;
+                switch (message.Type)
+                {
+                    case MessageType.Broadcast when message.Show:
+                        player.Broadcast(message.Duration, message.Content);
+                        break;
+                    case MessageType.Hint when message.Show:
+                        player.ShowHint(message.Content, message.Duration);
+                        break;
+                }
                 return;
+            }
 
             if (_toggledPlayers.ContainsKey(player))
             {
