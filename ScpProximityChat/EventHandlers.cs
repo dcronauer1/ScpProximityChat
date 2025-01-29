@@ -11,6 +11,7 @@ using UserSettings.ServerSpecific;
 using VoiceChat;
 using VoiceChat.Networking;
 using Object = UnityEngine.Object;
+using Exiled.Permissions.Extensions;
 
 namespace ScpProximityChat
 {
@@ -107,6 +108,9 @@ namespace ScpProximityChat
         {
             Player player = ev.Player;
 
+            if(!Permissions.CheckPermission(player, "scpprox.allow")) //code for permission
+                return;
+
             if(_toggledPlayers.ContainsKey(player))
             {
                 ToggleProximity(player);
@@ -157,6 +161,9 @@ namespace ScpProximityChat
 
         private void ToggleProximity(Player player)
         {
+            if (!Permissions.CheckPermission(player, "scpprox.allow")) //code for permission
+                return;
+
             if (_toggledPlayers.ContainsKey(player))
             {
                 NetworkServer.Destroy(_toggledPlayers[player].gameObject);
